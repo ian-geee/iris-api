@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Iris Flower Classifier 🌸</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+    form, .card { border: 1px solid #ddd; border-radius: 12px; padding: 1rem; margin-top: 1rem; }
+    label { display:block; margin:.5rem 0 .25rem; }
+    input { width:100%; padding:.5rem; border:1px solid #ccc; border-radius:8px; }
+    button { margin-top:1rem; padding:.7rem 1rem; border:0; border-radius:10px; cursor:pointer; }
+    .primary { background:#222; color:#fff; }
+    .muted { opacity:.7; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .mono { font-family: ui-monospace, Menlo, Consolas, monospace; }
+  </style>
+</head>
+<body>
+  <h1>Iris Flower Classifier 🌸</h1>
+  <p>Fill in the <em>fields</em> and click <em>Predict</em>.
+
+  <form id="f">
+    <div class="row">
+      <div>
+        <label for="sepal_length">Sepal length</label>
+        <input id="sepal_length" type="number" step="0.1" min="0" required>
+      </div>
+      <div>
+        <label for="sepal_width">Sepal width</label>
+        <input id="sepal_width" type="number" step="0.1" min="0" required>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="petal_length">Petal length</label>
+        <input id="petal_length" type="number" step="0.1" min="0" required>
+      </div>
+      <div>
+        <label for="petal_width">Petal width</label>
+        <input id="petal_width" type="number" step="0.1" min="0" required>
+      </div>
+    </div>
+    <button class="primary" id="btn" type="submit">PREDICT</button>
+    <span id="status" class="muted"></span>
+  </form>
+
+  <div id="result" class="card" style="display:none;">
+    <h3>Result</h3>
+    <pre id="pretty" class="mono"></pre>
+  </div>
+
+<script>
+const API_URL = "http://127.0.0.1:8000/predict";
+const API_KEY = "";
+
+const form = document.getElementById("f");
+const btn = document.getElementById("btn");
+const statusEl = document.getElementById("status");
+const result = document.getElementById("result");
+const pretty = document.getElementById("pretty");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  btn.disabled = true; statusEl.textContent = "Thinking...";
+  result.style.display = "none"; pretty.textContent = "";
+
+  const payload = {
+    sepal_length: parseFloat(document.getElementById("sepal_length").value),
+    sepal_width:  parseFloat(document.getElementById("sepal_width").value),
+    petal_length: parseFloat(document.getElementById("petal_length").value),
+    petal_width:  parseFloat(document.getElementById("petal_width").value),
+  };
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", 
+        ...(API_KEY ? { "x-api-key": API_KEY } : {})
+      },
+      body: JSON.stringify(payload), 
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    statusEl.textContent = "OK";
+    result.style.display = "block";
+    pretty.textContent = JSON.stringify(data, null, 2);
+  } catch (err) {
+    statusEl.textContent = "Error: " + err.message;
+  } finally {
+    btn.disabled = false; 
+  }
+});
+</script>
+</body>
+</html>

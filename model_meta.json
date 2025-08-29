@@ -1,0 +1,15 @@
+{
+  "feature_order": [
+    "sepal_length",
+    "sepal_width",
+    "petal_length",
+    "petal_width"
+  ],
+  "classes": [
+    "setosa",
+    "versicolor",
+    "virginica"
+  ],
+  "model_type": "LogReg Pipeline",
+  "model_version": "v1"
+}

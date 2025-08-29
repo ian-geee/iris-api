@@ -37,7 +37,7 @@ docker run -e FLOWER_API_KEY=secret_key -p 8000:8000 iris-api
 ```
 
 ## 5) Deployment
-- As of 2025-08-29, the API is hosted on Render : https://flower-api-daaw.onrender.com
+- As of 2025-08-29, the API is hosted on Render : https://iris-api-jvhc.onrender.com
 
 ---
  Thanks for reading through !

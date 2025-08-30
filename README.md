@@ -33,7 +33,7 @@ curl -X POST http://127.0.0.1:8000/predict ^
 ## 4) Docker (don't forget the port mapping)
 ```bash
 docker build -t iris-api .
-docker run -e FLOWER_API_KEY=secret_key -p 8000:8000 iris-api
+docker run -e IRIS_API_KEY=secret_key -p 8000:8000 iris-api
 ```
 
 ## 5) Deployment
